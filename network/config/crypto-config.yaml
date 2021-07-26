@@ -1,0 +1,40 @@
+# Defines three organizations
+#  - Orderer organization
+#  - Org1  = Single peer organization
+#    Uses the "Specs" to declare the peers instead of Template
+#  - Org2  = Another peer organization
+# SOLUTION to the exercise
+
+##### Orderer for Rosered
+OrdererOrgs:
+  - Name: Orderer
+    Domain: rosered.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+      
+#### Peers for Rosered
+PeerOrgs:
+  # Peer configuration for Rosered
+  - Name: Rosered
+    Domain: rosered.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: rosered-peer1
+        CommonName: rosered-peer1
+    Users:
+      Count: 1
+
+  # Peer configuration for Maruko
+  - Name: Maruko
+    Domain: maruko.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: maruko-peer1
+        CommonName: maruko-peer1
+    Users:
+      Count: 1
+
+
+
+      
