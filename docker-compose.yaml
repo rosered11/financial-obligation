@@ -6,17 +6,33 @@ networks:
 
 services:
   # Webapi
-  # webapi:
-  #   container_name: webapi
-  #   image: rosered/webapi:latest
-  #   ports:
-  #     - 8081:8081
-  #   networks:
-  #     - hobby
-  #   depends_on: 
-  #     - orderer.rosered.com
-  #     - rosered-peer1.rosered.com
-  #     - maruko-peer1.maruko.com
+  webapi:
+    container_name: webapi
+    image: rosered/websmartcontract:latest
+    ports:
+      - 8081:8081
+    networks:
+      - hobby
+    depends_on: 
+      - orderer.rosered.com
+      - rosered-peer1.rosered.com
+    environment:
+      - CORE_PEER_ID=rosered-peer1.rosered.com
+      - CORE_PEER_ADDRESS=rosered-peer1.rosered.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=rosered-peer1.rosered.com:7051
+      - CORE_PEER_LOCALMSPID=RoseredMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
+      - CORE_PEER_FILESYSTEMPATH=/var/ledger
+    volumes:
+      # Folder with channel create tx file
+      - ${PWD}/../config:/var/hyperledger/channeltx
+      # Map the folder with MSP for Peer
+      - ${PWD}/../crypto/crypto-config/peerOrganizations/rosered.com/peers/rosered-peer1/msp:/var/hyperledger/msp
+      # Map the current folder to cfg
+      - ${PWD}/../config:/var/hyperledger/config
+      - /var/run/:/host/var/run/
+      # Ledger folder for the peer
+      - ${HOME}/ledgers/rosered-peer1.rosered.com/:/var/ledger
   # Orderer
   orderer.rosered.com:
     container_name: orderer.rosered.com
