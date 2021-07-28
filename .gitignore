@@ -13,3 +13,12 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+.vagrant
+gocc/*
+network/setup/temp
+network/bin/_launch.sh
+network/bin/_shutdown.sh
+network/crypto
+*.tx
+*.block

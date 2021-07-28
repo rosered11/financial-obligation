@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# Change this to control the log levels
+# export CORE_LOGGING_LEVEL=info  #debug  #info #warning
+
+usage() {
+    echo ". set-env.sh   ORG_NAME  "
+    echo "               Sets the environment variables for the peer that need to be used"
+}
+
+# Change this to appropriate level
+DIR="$( which $BASH_SOURCE)"
+DIR="$(dirname $DIR)"
+
+function mylog_write {
+    echo "---> ${0##*/} => $@" >> $DIR/my-log.txt
+}
+
+export BINS_FOLDER=$DIR
+
+source $DIR/to_absolute_path.sh
+
+to-absolute-path $DIR
+DIR=$ABS_PATH
+
+# echo "-->$DIR"
+export FABRIC_CFG_PATH="$DIR/../config"
+to-absolute-path $FABRIC_CFG_PATH
+FABRIC_CFG_PATH=$ABS_PATH
+mylog_write "# FABRIC_CFG_PATH: $FABRIC_CFG_PATH"
+
+
+# export ORDERER_ADDRESS=localhost:7050
+export ORDERER_ADDRESS=orderer.rosered.com:7050
+mylog_write "# ORDERER_ADDRESS: $ORDERER_ADDRESS"
+
+# Sets the ORG Name
+ORG_NAME=$1
+if [ -z $ORG_NAME ];
+then
+    usage                            
+    echo "Please provide the ORG Name!!!"
+elif [ "$ORG_NAME" = "rosered" ];
+then
+    # echo "Switching the Org = $ORG_NAME"
+    # export CORE_PEER_ADDRESS=localhost:7051
+    export CORE_PEER_ADDRESS=rosered-peer1.rosered.com:7051
+elif [ "$ORG_NAME" = "maruko" ];
+then
+    # echo "Switching the Org = $ORG_NAME"
+    # export CORE_PEER_ADDRESS=localhost:8051
+    export CORE_PEER_ADDRESS=maruko-peer1.maruko.com:8051
+else
+    usage                            
+    echo "INVALID ORG Name!!!"
+fi
+
+mylog_write "# CORE_PEER_ADDRESS: $CORE_PEER_ADDRESS"
+
+export CORE_PEER_ID=$ORG_NAME-peer1.$ORG_NAME.com
+
+mylog_write "# CORE_PEER_ID: $CORE_PEER_ID"
+
+# Create the path to the crypto config folder
+CRYPTO_CONFIG_ROOT_FOLDER=$DIR/../crypto/crypto-config/peerOrganizations
+mylog_write "# CRYPTO_CONFIG_ROOT_FOLDER: $CRYPTO_CONFIG_ROOT_FOLDER"
+export CORE_PEER_MSPCONFIGPATH=$CRYPTO_CONFIG_ROOT_FOLDER/$ORG_NAME.com/users/Admin@$ORG_NAME.com/msp
+to-absolute-path $CORE_PEER_MSPCONFIGPATH
+CORE_PEER_MSPCONFIGPATH=$ABS_PATH
+mylog_write "# CORE_PEER_MSPCONFIGPATH: $CORE_PEER_MSPCONFIGPATH"
+
+# Capitalize the first letter of Org name e.g., rosered => Rosered  maruko => Maruko
+MSP_ID="$(tr '[:lower:]' '[:upper:]' <<< ${ORG_NAME:0:1})${ORG_NAME:1}"
+export CORE_PEER_LOCALMSPID=$MSP_ID"MSP"
+mylog_write "# CORE_PEER_LOCALMSPID: $CORE_PEER_LOCALMSPID"
+
+# Setup the default logging spec to info
+if [ -z "$FABRIC_LOGGING_SPEC" ]; then
+    export FABRIC_LOGGING_SPEC=info
+fi
+mylog_write "# FABRIC_LOGGING_SPEC: $FABRIC_LOGGING_SPEC"
+# Sets the current org
+export ORGANIZATION_CONTEXT=$1
+mylog_write "# ORGANIZATION_CONTEXT: $ORGANIZATION_CONTEXT"
+# show-env.sh
+
+
+# Write the env to the file
+echo "# Environment in use"   > $DIR/env.sh
+echo "export CORE_PEER_LOCALMSPID=$CORE_PEER_LOCALMSPID" >> $DIR/env.sh
+echo "export CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH" >> $DIR/env.sh
+echo "export CORE_PEER_ID=$CORE_PEER_ID" >> $DIR/env.sh
+echo "export FABRIC_LOGGING_SPEC=$FABRIC_LOGGING_SPEC" >> $DIR/env.sh
+echo "export CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS" >> $DIR/env.sh
+echo "export ORDERER_ADDRESS=$ORDERER_ADDRESS" >> $DIR/env.sh
+echo "export FABRIC_CFG_PATH=$FABRIC_CFG_PATH" >> $DIR/env.sh
+
+# Simply checks if this script was executed directly on the terminal/shell
+# it has the '.'
+if [[ $0 = *"set-env.sh" ]]
+then
+    echo "Did you use the . before ./set-env.sh? If yes then we are good :)"
+fi

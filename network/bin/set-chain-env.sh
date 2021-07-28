@@ -42,7 +42,7 @@ function reset_chaincode_variables {
     CC_ENDORSEMENT_POLICY=""
     CC2_SEQUENCE="1"
     CC2_INIT_REQUIRED="true"
-    CC2_PACKAGE_FOLDER="/home/rosered/mygithub/financial-obligation/smart-contact/packages"
+    CC2_PACKAGE_FOLDER="/home/vagrant/packages"
     CC2_SIGNATURE_POLICY=""
     CC2_CHANNEL_CONFIG_POLICY=""
     CC2_ENDORSING_PEERS=""

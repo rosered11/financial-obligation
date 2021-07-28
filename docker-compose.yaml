@@ -1,12 +1,22 @@
 
-version: '3.9'
+version: '3.3'
 
-# networks:
-#   hobby:
-#     # Use a custom driver
-#     driver: custom-driver-1
+networks:
+  hobby:
 
 services:
+  # Webapi
+  # webapi:
+  #   container_name: webapi
+  #   image: rosered/webapi:latest
+  #   ports:
+  #     - 8081:8081
+  #   networks:
+  #     - hobby
+  #   depends_on: 
+  #     - orderer.rosered.com
+  #     - rosered-peer1.rosered.com
+  #     - maruko-peer1.maruko.com
   # Orderer
   orderer.rosered.com:
     container_name: orderer.rosered.com
@@ -32,93 +42,96 @@ services:
     - ${PWD}/../config:/var/hyperledger/config
     - ${HOME}/ledgers/orderer.rosered.com:/var/ledger
     ports:
-      - 7050:7150
-    network_mode: "bridge"
+      - 7050:7050
+    networks:
+      - hobby
 
   # Rosered peer1
-  # rosered-peer1.rosered.com:
-  #   container_name: rosered-peer1.rosered.com
-  #   image: hyperledger/fabric-peer:2.3
-  #   environment:
-  #     - FABRIC_CFG_PATH=/var/hyperledger/config
-  #     # - CORE_LOGGING_LEVEL=debug
-  #     - FABRIC_LOGGING_SPEC=DEBUG
+  rosered-peer1.rosered.com:
+    container_name: rosered-peer1.rosered.com
+    image: hyperledger/fabric-peer:2.3
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      # - CORE_LOGGING_LEVEL=debug
+      - FABRIC_LOGGING_SPEC=DEBUG
 
-  #     - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
 
-  #     - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_hobby
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=vagrant_hobby
 
-  #     - CORE_PEER_ID=rosered-peer1.rosered.com
-  #     - CORE_PEER_ADDRESS=rosered-peer1.rosered.com:7151
-  #     - CORE_PEER_GOSSIP_EXTERNALENDPOINT=rosered-peer1.rosered.com:7151
+      - CORE_PEER_ID=rosered-peer1.rosered.com
+      - CORE_PEER_ADDRESS=rosered-peer1.rosered.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=rosered-peer1.rosered.com:7051
 
-  #     - CORE_PEER_LOCALMSPID=RoseredMSP
-  #     - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
-  #     - CORE_PEER_TLS_ENABLED=false
-  #     - CORE_PEER_FILESYSTEMPATH=/var/ledger
+      - CORE_PEER_LOCALMSPID=RoseredMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_FILESYSTEMPATH=/var/ledger
 
-  #   working_dir: $HOME
-  #   command: peer node start
+    working_dir: $HOME
+    command: peer node start
 
-  #   volumes:
-  #     # Folder with channel create tx file
-  #     - ${PWD}/../config:/var/hyperledger/channeltx
-  #     # Map the folder with MSP for Peer
-  #     - ${PWD}/../crypto/crypto-config/peerOrganizations/rosered.com/peers/rosered-peer1/msp:/var/hyperledger/msp
-  #     # Map the current folder to cfg
-  #     - ${PWD}/../config:/var/hyperledger/config
-  #     - /var/run/:/host/var/run/
-  #     # Ledger folder for the peer
-  #     - ${HOME}/ledgers/rosered-peer1.rosered.com/:/var/ledger
-  #   depends_on: 
-  #     - orderer.rosered.com
-  #   ports:
-  #     - 7151:7151
-  #     - 7152:7152
-  #     - 7153:7153
-  #   network_mode: "bridge"
+    volumes:
+      # Folder with channel create tx file
+      - ${PWD}/../config:/var/hyperledger/channeltx
+      # Map the folder with MSP for Peer
+      - ${PWD}/../crypto/crypto-config/peerOrganizations/rosered.com/peers/rosered-peer1/msp:/var/hyperledger/msp
+      # Map the current folder to cfg
+      - ${PWD}/../config:/var/hyperledger/config
+      - /var/run/:/host/var/run/
+      # Ledger folder for the peer
+      - ${HOME}/ledgers/rosered-peer1.rosered.com/:/var/ledger
+    depends_on: 
+      - orderer.rosered.com
+    ports:
+      - 7051:7051
+      - 7052:7052
+      - 7053:7053
+    networks:
+      - hobby
 
-  # # Maruko peer1
-  # maruko-peer1.maruko.com:
-  #   container_name: maruko-peer1.maruko.com
-  #   image: hyperledger/fabric-peer:2.3
-  #   environment:
-  #     - FABRIC_CFG_PATH=/var/hyperledger/config
-  #     # - CORE_LOGGING_LEVEL=debug
-  #     - FABRIC_LOGGING_SPEC=DEBUG
+  # Maruko peer1
+  maruko-peer1.maruko.com:
+    container_name: maruko-peer1.maruko.com
+    image: hyperledger/fabric-peer:2.3
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      # - CORE_LOGGING_LEVEL=debug
+      - FABRIC_LOGGING_SPEC=DEBUG
 
-  #     - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
 
-  #     - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_hobby
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=vagrant_hobby
 
-  #     - CORE_PEER_ID=maruko-peer1.maruko.com
-  #     - CORE_PEER_ADDRESS=maruko-peer1.maruko.com:8051
-  #     - CORE_PEER_LISTENADDRESS=maruko-peer1.maruko.com:8051
-  #     - CORE_PEER_CHAINCODELISTENADDRESS=maruko-peer1.maruko.com:8052
-  #     - CORE_PEER_GOSSIP_EXTERNALENDPOINT=maruko-peer1.maruko.com:8051
-  #     - CORE_PEER_LOCALMSPID=MarukoMSP
-  #     - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
-  #     - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_ID=maruko-peer1.maruko.com
+      - CORE_PEER_ADDRESS=maruko-peer1.maruko.com:8051
+      - CORE_PEER_LISTENADDRESS=maruko-peer1.maruko.com:8051
+      - CORE_PEER_CHAINCODELISTENADDRESS=maruko-peer1.maruko.com:8052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=maruko-peer1.maruko.com:8051
+      - CORE_PEER_LOCALMSPID=MarukoMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
+      - CORE_PEER_TLS_ENABLED=false
 
-  #     - CORE_PEER_FILESYSTEMPATH=/var/ledger
-  #   working_dir: $HOME
-  #   # command: peer node start --peer-chaincodedev=true
-  #   command: peer node start
+      - CORE_PEER_FILESYSTEMPATH=/var/ledger
+    working_dir: $HOME
+    # command: peer node start --peer-chaincodedev=true
+    command: peer node start
 
-  #   volumes:
-  #     # Folder with channel create tx file
-  #     - ${PWD}/../config:/var/hyperledger/channeltx
-  #     # Map the folder with MSP for Peer
-  #     - ${PWD}/../crypto/crypto-config/peerOrganizations/maruko.com/peers/maruko-peer1/msp:/var/hyperledger/msp
-  #     # Map the current folder to cfg
-  #     - ${PWD}/../config:/var/hyperledger/config
-  #     - /var/run/:/host/var/run/
-  #     # Ledger folder for the peer
-  #     - ${HOME}/ledgers/maruko-peer1.maruko.com:/var/ledger
-  #   depends_on: 
-  #     - orderer.rosered.com
-  #   ports:
-  #     - 8051:8051
-  #     - 8052:8052
-  #     - 8053:8053
-  #   network_mode: "bridge"
+    volumes:
+      # Folder with channel create tx file
+      - ${PWD}/../config:/var/hyperledger/channeltx
+      # Map the folder with MSP for Peer
+      - ${PWD}/../crypto/crypto-config/peerOrganizations/maruko.com/peers/maruko-peer1/msp:/var/hyperledger/msp
+      # Map the current folder to cfg
+      - ${PWD}/../config:/var/hyperledger/config
+      - /var/run/:/host/var/run/
+      # Ledger folder for the peer
+      - ${HOME}/ledgers/maruko-peer1.maruko.com:/var/ledger
+    depends_on: 
+      - orderer.rosered.com
+    ports:
+      - 8051:8051
+      - 8052:8052
+      - 8053:8053
+    networks:
+      - hobby

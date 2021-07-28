@@ -30,21 +30,21 @@ Vagrant.configure("2") do |config|
 
     # Ports foward
     # For Orderer Container
-    config.vm.network "forwarded_port", guest: 17050, host: 17050
+    config.vm.network "forwarded_port", guest: 7050, host: 7050
 
     #Explorer
-    config.vm.network "forwarded_port", guest: 18080, host: 18080
+    config.vm.network "forwarded_port", guest: 8080, host: 8080
     #CouchDB
-    config.vm.network "forwarded_port", guest: 15984, host: 15984
+    config.vm.network "forwarded_port", guest: 5984, host: 5984
 
 
     # For Peer Container
-    config.vm.network "forwarded_port", guest: 17051, host: 17051
-    config.vm.network "forwarded_port", guest: 17052, host: 17052
-    config.vm.network "forwarded_port", guest: 18051, host: 18051
-    config.vm.network "forwarded_port", guest: 18052, host: 18052
-    config.vm.network "forwarded_port", guest: 19051, host: 19051
-    config.vm.network "forwarded_port", guest: 19052, host: 19052
+    config.vm.network "forwarded_port", guest: 7051, host: 7051
+    config.vm.network "forwarded_port", guest: 7052, host: 7052
+    config.vm.network "forwarded_port", guest: 8051, host: 8051
+    config.vm.network "forwarded_port", guest: 8052, host: 8052
+    config.vm.network "forwarded_port", guest: 9051, host: 9051
+    config.vm.network "forwarded_port", guest: 9052, host: 9052
     
 
     # This gets executed for both vm1 & vm2

@@ -47,7 +47,7 @@ Organizations:
           Rule: "OR('RoseredMSP.member')"
     AnchorPeers:
       - Host: rosered-peer1.rosered.com
-        Port: 7151
+        Port: 7051
 
   # Added by the Administrator
   - &Maruko
@@ -78,7 +78,7 @@ Orderer: &OrdererDefaults
   OrdererType: solo
 
   Addresses:
-    - orderer.rosered.com:7150
+    - orderer.rosered.com:7050
 
     # Policies for Orderer
   Policies:
