@@ -14,6 +14,8 @@ sudo -E ./go.sh
 # Install JQ
 sudo apt-get install -y jq
 
+# Insalll Build Essential
+sudo apt-get install build-essential
 
 
 echo "====== Please Logout & Logback in ======"

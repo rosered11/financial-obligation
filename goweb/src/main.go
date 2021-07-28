@@ -25,15 +25,19 @@ func customHandler(c *gin.Context) {
 		c.Status(http.StatusBadRequest)
 		return
 	}
+	//peer chaincode query -C hobbychannel -n my -c '{"Args":["balanceOf","john"]}'
+	app := "peer"
 
-	app := "echo"
+	arg0 := "chaincode"
+	arg1 := "query"
+	arg2 := "-C"
+	arg3 := "hobbychannel"
+	arg4 := "-n"
+	arg5 := "my"
+	arg6 := "-c"
+	arg7 := "{\"Args\":[\"balanceOf\",\"john\"]}"
 
-	arg0 := "-e"
-	arg1 := "Hello world"
-	arg2 := "\n\tfrom"
-	arg3 := "golang"
-
-	cmd := exec.Command(app, arg0, arg1, arg2, arg3)
+	cmd := exec.Command(app, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 	stdout, err := cmd.Output()
 
 	if err != nil {

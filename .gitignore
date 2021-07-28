@@ -22,3 +22,4 @@ network/bin/_shutdown.sh
 network/crypto
 *.tx
 *.block
+my-log.txt

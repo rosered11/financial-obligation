@@ -46,6 +46,8 @@ Vagrant.configure("2") do |config|
     config.vm.network "forwarded_port", guest: 9051, host: 9051
     config.vm.network "forwarded_port", guest: 9052, host: 9052
     
+    # Web Api Containner
+    config.vm.network "forwarded_port", guest: 8081, host: 8081
 
     # This gets executed for both vm1 & vm2
     # config.vm.provision "shell", inline:  "echo 'All good'"
